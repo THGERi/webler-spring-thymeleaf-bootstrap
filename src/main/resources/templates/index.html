@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Spring Boot Thymeleaf Application - Bootstrap Table</title>
+
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}"/>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 mt-5 mb-5">
+            <table id="example" class="table table-bordered" style="width: 100%">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Office</th>
+                    <th>Start date</th>
+                    <th>Salary</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="employee : ${employees.getContents()}">
+                    <td th:text="${employee.name}">Name</td>
+                    <td th:text="${employee.position}">Position</td>
+                    <td th:text="${employee.office}">Office</td>
+                    <td th:text="${#dates.format(employee.startDate, 'dd.MM.yyyy')}">Start date</td>
+                    <td th:text="'$' + ${#numbers.formatDecimal(employee.salary, 0, 'COMMA', 2, 'POINT')}">Salary</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <nav aria-label="Page navigation" class="paging">
+                <ul class="pagination" th:if="${employees.totalPage > 1}">
+                    <li class="page-item" th:classappend="${employees.pageNumber == 0 ? 'disabled' : ''}">
+                        <a class="page-link" th:href="@{'/employees?pageNumber=' + ${employees.pageNumber - 1}}"
+                           tabindex="-1">Previous</a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, employees.totalPage - 1)}"
+                        th:classappend="${i == employees.pageNumber ? 'active' : ''}">
+                        <a class="page-link" th:href="@{'/employees?pageNumber=' + ${i}}">[[${i + 1}]]</a>
+                    </li>
+                    <li class="page-item" th:classappend="${employees.pageNumber + 1 == employees.totalPage ? 'disabled' : ''}">
+                        <a class="page-link" th:href="@{'/employees?pageNumber=' + ${employees.pageNumber + 1}}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+</body>
+</html>
